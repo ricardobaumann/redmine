@@ -68,6 +68,19 @@
 #       authentication: :plain
 #       user_name: "your_email@gmail.com"
 #       password: "your_password"
+
+ development:
+   email_delivery:
+     delivery_method: :smtp
+     smtp_settings:
+       enable_starttls_auto: true
+       address: "smtp.gmail.com"
+       port: 587
+       domain: "zenvia.com.br" # 'your.domain.com' for GoogleApps
+       authentication: :plain
+       user_name: "ricardo.baumann@zenvia.com.br"
+       password: "01081951"
+
 #
 #
 # === More configuration options
