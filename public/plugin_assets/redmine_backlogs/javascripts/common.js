@@ -115,6 +115,7 @@ RB.UserPreferences = RB.Object.create({
   
   set: function(key, value, global){
     if (global) {
+
       var path = RB.urlFor('home')+'rb';
       RB.$.cookie(key, value, { expires: 365 * 10, path: path });
     }
