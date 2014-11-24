@@ -22,7 +22,6 @@ module Redmine
     end
 
     def l(*args)
-      rescued = false
       begin
         #raise "generic error"
         case args.size
@@ -40,10 +39,7 @@ module Redmine
           raise "Translation string with multiple values: #{args.first}"
         end
       rescue Exception => e
-        return "Label missing" if rescued
-        rescued = true
-        set_language_if_valid("pt-BR")
-        retry
+        return "Label missing"
       end
     end
 
