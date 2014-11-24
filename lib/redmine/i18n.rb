@@ -22,19 +22,28 @@ module Redmine
     end
 
     def l(*args)
-      case args.size
-      when 1
-        ::I18n.t(*args)
-      when 2
-        if args.last.is_a?(Hash)
+      rescued = false
+      begin
+        #raise "generic error"
+        case args.size
+        when 1
           ::I18n.t(*args)
-        elsif args.last.is_a?(String)
-          ::I18n.t(args.first, :value => args.last)
+        when 2
+          if args.last.is_a?(Hash)
+            ::I18n.t(*args)
+          elsif args.last.is_a?(String)
+            ::I18n.t(args.first, :value => args.last)
+          else
+            ::I18n.t(args.first, :count => args.last)
+          end
         else
-          ::I18n.t(args.first, :count => args.last)
+          raise "Translation string with multiple values: #{args.first}"
         end
-      else
-        raise "Translation string with multiple values: #{args.first}"
+      rescue Exception => e
+        return "Label missing" if rescued
+        rescued = true
+        set_language_if_valid("pt-BR")
+        retry
       end
     end
 
