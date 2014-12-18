@@ -13,4 +13,4 @@ def secure_token
   end
 end
 
-Redmine::Application.config.secret_key_base = secure_token
+RedmineApp::Application.config.secret_key_base = secure_token
