@@ -162,15 +162,7 @@ ja:
   general_csv_separator: ','
   general_csv_decimal_separator: '.'
   general_csv_encoding: CP932
-  ## Redmine 1.2.0 現在、この値によって、pdfの出力のフォントを切り替えています。
-  ## CRuby では CP932 にしてください。
-  ## JRuby 1.6.2 (ruby-1.8.7-p330) では、CP932 ですと
-  ## Iconv::InvalidEncoding例外が発生します。
-  ## JRuby では、SJIS か Shift_JIS にしてください。
-  ## ご存知の通り、CP932 と SJIS は別物ですが、
-  ## そこまでの検証はしていません。
-  # general_pdf_encoding: SJIS
-  general_pdf_encoding: CP932
+  general_pdf_fontname: kozminproregular
   general_first_day_of_week: '7'
 
   notice_account_updated: アカウントが更新されました。
@@ -281,7 +273,7 @@ ja:
   field_is_public: 公開
   field_parent: 親プロジェクト名
   field_is_in_roadmap: チケットをロードマップに表示する
-  field_login: ログイン
+  field_login: ログインID
   field_mail_notification: メール通知
   field_admin: システム管理者
   field_last_login_on: 最終接続日
@@ -348,7 +340,7 @@ ja:
   setting_app_title: アプリケーションのタイトル
   setting_app_subtitle: アプリケーションのサブタイトル
   setting_welcome_text: ウェルカムメッセージ
-  setting_default_language: 既定の言語
+  setting_default_language: デフォルトの言語
   setting_login_required: 認証が必要
   setting_self_registration: ユーザーによるアカウント登録
   setting_attachment_max_size: 添付ファイルサイズの上限
@@ -375,7 +367,7 @@ ja:
   setting_emails_header: メールのヘッダ
   setting_emails_footer: メールのフッタ
   setting_protocol: プロトコル
-  setting_per_page_options: ページ毎の表示件数
+  setting_per_page_options: ページごとの表示件数
   setting_user_format: ユーザー名の表示書式
   setting_activity_days_default: プロジェクトの活動ページに表示される日数
   setting_display_subprojects_issues: サブプロジェクトのチケットをメインプロジェクトに表示する
@@ -614,7 +606,6 @@ ja:
   label_used_by: 使用中
   label_details: 詳細
   label_add_note: 注記を追加
-  label_per_page: ページ毎
   label_calendar: カレンダー
   label_months_from: ヶ月分
   label_gantt: ガントチャート
@@ -757,7 +748,7 @@ ja:
   label_date_from: "日付指定: "
   label_date_to: から
   label_language_based: ユーザーの言語の設定に従う
-  label_sort_by: "並び替え %{value}"
+  label_sort_by: "並べ替え %{value}"
   label_send_test_email: テストメールを送信
   label_feeds_access_key: Atomアクセスキー
   label_missing_feeds_access_key: Atomアクセスキーが見つかりません
@@ -769,11 +760,11 @@ ja:
   label_jump_to_a_project: プロジェクトへ移動...
   label_file_plural: ファイル
   label_changeset_plural: 更新履歴
-  label_default_columns: 既定の項目
+  label_default_columns: デフォルトの項目
   label_no_change_option: (変更無し)
   label_bulk_edit_selected_issues: チケットの一括編集
   label_theme: テーマ
-  label_default: 既定
+  label_default: デフォルト
   label_search_titles_only: タイトルのみ
   label_user_mail_option_all: "参加しているプロジェクトのすべての通知"
   label_user_mail_option_selected: "選択したプロジェクトのすべての通知..."
@@ -786,7 +777,7 @@ ja:
   label_registration_manual_activation: 手動でアカウントを有効化
   label_registration_automatic_activation: 自動でアカウントを有効化
   label_display_per_page: "1ページに: %{value}"
-  label_age: 年齢
+  label_age: 経過期間
   label_change_properties: プロパティの変更
   label_general: 全般
   label_more: 続き
@@ -794,7 +785,7 @@ ja:
   label_plugins: プラグイン
   label_ldap_authentication: LDAP認証
   label_downloads_abbr: DL
-  label_optional_description: 任意のコメント
+  label_optional_description: 説明 (任意)
   label_add_another_file: 別のファイルを追加
   label_preferences: 設定
   label_chronological_order: 古い順
@@ -1133,11 +1124,48 @@ ja:
   label_drop_down_list: ドロップダウンリスト
   label_checkboxes: チェックボックス
   label_link_values_to: 値に設定するリンクURL
-  setting_force_default_language_for_anonymous: 匿名ユーザーに既定の言語を強制
-  setting_force_default_language_for_loggedin: ログインユーザーに既定の言語を強制
+  setting_force_default_language_for_anonymous: 匿名ユーザーにデフォルトの言語を強制
+  setting_force_default_language_for_loggedin: ログインユーザーにデフォルトの言語を強制
   label_custom_field_select_type: カスタムフィールドを追加するオブジェクトを選択してください
   label_issue_assigned_to_updated: 担当者の更新
   label_check_for_updates: アップデートを確認
   label_latest_compatible_version: 互換性のある最新バージョン
   label_unknown_plugin: 不明なプラグイン
   label_radio_buttons: ラジオボタン
+  label_group_anonymous: 匿名ユーザー
+  label_group_non_member: 非メンバー
+  label_add_projects: プロジェクトの追加
+  field_default_status: デフォルトのステータス
+  text_subversion_repository_note: '例: file:///, http://, https://, svn://, svn+[tunnelscheme]://'
+  field_users_visibility: 表示できるユーザー
+  label_users_visibility_all: すべてのアクティブなユーザー
+  label_users_visibility_members_of_visible_projects: 見ることができるプロジェクトのメンバー
+  label_edit_attachments: 添付ファイルの編集
+  setting_link_copied_issue: チケットをコピーしたときに関連を設定
+  label_link_copied_issue: コピーしたチケットに関連を設定
+  label_ask: 都度選択
+  label_search_attachments_yes: 添付ファイルの名前と説明も検索
+  label_search_attachments_no: 添付ファイルを除外
+  label_search_attachments_only: 添付ファイルのみ検索
+  label_search_open_issues_only: 未完了のチケットのみ
+  field_address: メールアドレス
+  setting_max_additional_emails: 追加メールアドレス数の上限
+  label_email_address_plural: メールアドレス
+  label_email_address_add: メールアドレスの追加
+  label_enable_notifications: 通知を有効にする
+  label_disable_notifications: 通知を無効にする
+  setting_search_results_per_page: ページごとの検索結果表示件数
+  label_blank_value: 空
+  permission_copy_issues: チケットのコピー
+  error_password_expired: Your password has expired or the administrator requires you
+    to change it.
+  field_time_entries_visibility: Time logs visibility
+  setting_password_max_age: Require password change after
+  label_parent_task_attributes: Parent tasks attributes
+  label_parent_task_attributes_derived: Calculated from subtasks
+  label_parent_task_attributes_independent: Independent of subtasks
+  label_time_entries_visibility_all: All time entries
+  label_time_entries_visibility_own: Time entries created by the user
+  label_member_management: Member management
+  label_member_management_all_roles: All roles
+  label_member_management_selected_roles_only: Only these roles

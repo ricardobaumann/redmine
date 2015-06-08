@@ -1,8 +1,8 @@
 /* Redmine - project management software
-   Copyright (C) 2006-2014  Jean-Philippe Lang */
+   Copyright (C) 2006-2015  Jean-Philippe Lang */
 
 function checkAll(id, checked) {
-  $('#'+id).find('input[type=checkbox]:enabled').attr('checked', checked);
+  $('#'+id).find('input[type=checkbox]:enabled').prop('checked', checked);
 }
 
 function toggleCheckboxesBySelector(selector) {
@@ -10,7 +10,7 @@ function toggleCheckboxesBySelector(selector) {
   $(selector).each(function(index) {
     if (!$(this).is(':checked')) { all_checked = false; }
   });
-  $(selector).attr('checked', !all_checked);
+  $(selector).prop('checked', !all_checked);
 }
 
 function showAndScrollTo(id, focus) {
@@ -74,6 +74,31 @@ function hideFieldset(el) {
   fieldset.children('div').hide();
 }
 
+// columns selection
+function moveOptions(theSelFrom, theSelTo) {
+  $(theSelFrom).find('option:selected').detach().prop("selected", false).appendTo($(theSelTo));
+}
+
+function moveOptionUp(theSel) {
+  $(theSel).find('option:selected').each(function(){
+    $(this).prev(':not(:selected)').detach().insertAfter($(this));
+  });
+}
+
+function moveOptionTop(theSel) {
+  $(theSel).find('option:selected').detach().prependTo($(theSel));
+}
+
+function moveOptionDown(theSel) {
+  $($(theSel).find('option:selected').get().reverse()).each(function(){
+    $(this).next(':not(:selected)').detach().insertBefore($(this));
+  });
+}
+
+function moveOptionBottom(theSel) {
+  $(theSel).find('option:selected').detach().appendTo($(theSel));
+}
+
 function initFilters() {
   $('#add_filter_select').change(function() {
     addFilter($(this).val(), '', []);
@@ -81,14 +106,14 @@ function initFilters() {
   $('#filters-table td.field input[type=checkbox]').each(function() {
     toggleFilter($(this).val());
   });
-  $('#filters-table td.field input[type=checkbox]').live('click', function() {
+  $('#filters-table').on('click', 'td.field input[type=checkbox]', function() {
     toggleFilter($(this).val());
   });
-  $('#filters-table .toggle-multiselect').live('click', function() {
+  $('#filters-table').on('click', '.toggle-multiselect', function() {
     toggleMultiSelect($(this).siblings('select'));
   });
-  $('#filters-table input[type=text]').live('keypress', function(e) {
-    if (e.keyCode == 13) submit_query_form("query_form");
+  $('#filters-table').on('keypress', 'input[type=text]', function(e) {
+    if (e.keyCode == 13) $(this).closest('form').submit();
   });
 }
 
@@ -100,9 +125,9 @@ function addFilter(field, operator, values) {
   } else {
     buildFilterRow(field, operator, values);
   }
-  $('#cb_'+fieldId).attr('checked', true);
+  $('#cb_'+fieldId).prop('checked', true);
   toggleFilter(field);
-  $('#add_filter_select').val('').children('option').each(function() {
+  $('#add_filter_select').val('').find('option').each(function() {
     if ($(this).attr('value') == field) {
       $(this).attr('disabled', true);
     }
@@ -189,6 +214,7 @@ function buildFilterRow(field, operator, values) {
       if (values[0] == filterValue[1]) { option.attr('selected', true); }
       select.append(option);
     }
+    break;
   case "integer":
   case "float":
     tr.find('td.values').append(
@@ -287,11 +313,6 @@ function toggleMultiSelect(el) {
   }
 }
 
-function submit_query_form(id) {
-  selectAllOptions("selected_columns");
-  $('#'+id).submit();
-}
-
 function showTab(name, url) {
   $('div#content .tab-content').hide();
   $('div.tabs a').removeClass('selected');
@@ -357,10 +378,10 @@ function setPredecessorFieldsVisibility() {
   }
 }
 
-function showModal(id, width) {
+function showModal(id, width, title) {
   var el = $('#'+id).first();
   if (el.length === 0 || el.is(':visible')) {return;}
-  var title = el.find('h3.title').text();
+  if (!title) title = el.find('h3.title').text();
   el.dialog({
     width: width,
     modal: true,
@@ -519,6 +540,23 @@ function observeSearchfield(fieldId, targetId, url) {
   });
 }
 
+function beforeShowDatePicker(input, inst) {
+  var default_date = null;
+  switch ($(input).attr("id")) {
+    case "issue_start_date" :
+      if ($("#issue_due_date").size() > 0) {
+        default_date = $("#issue_due_date").val();
+      }
+      break;
+    case "issue_due_date" :
+      if ($("#issue_start_date").size() > 0) {
+        default_date = $("#issue_start_date").val();
+      }
+      break;
+  }
+  $(input).datepicker("option", "defaultDate", default_date);
+}
+
 function initMyPageSortable(list, url) {
   $('#list-'+list).sortable({
     connectWith: '.block-receiver',
@@ -537,10 +575,10 @@ function initMyPageSortable(list, url) {
 var warnLeavingUnsavedMessage;
 function warnLeavingUnsaved(message) {
   warnLeavingUnsavedMessage = message;
-  $('form').live('submit', function(){
+  $(document).on('submit', 'form', function(){
     $('textarea').removeData('changed');
   });
-  $('textarea').live('change', function(){
+  $(document).on('change', 'textarea', function(){
     $(this).data('changed', 'changed');
   });
   window.onbeforeunload = function(){
@@ -555,12 +593,12 @@ function warnLeavingUnsaved(message) {
 }
 
 function setupAjaxIndicator() {
-  $('#ajax-indicator').bind('ajaxSend', function(event, xhr, settings) {
+  $(document).bind('ajaxSend', function(event, xhr, settings) {
     if ($('.ajax-loading').length === 0 && settings.contentType != 'application/octet-stream') {
       $('#ajax-indicator').show();
     }
   });
-  $('#ajax-indicator').bind('ajaxStop', function() {
+  $(document).bind('ajaxStop', function() {
     $('#ajax-indicator').hide();
   });
 }

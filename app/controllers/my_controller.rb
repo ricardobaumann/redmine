@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -53,8 +53,8 @@ class MyController < ApplicationController
     @user = User.current
     @pref = @user.pref
     if request.post?
-      @user.safe_attributes = params[:user]
-      @user.pref.attributes = params[:pref]
+      @user.safe_attributes = params[:user] if params[:user]
+      @user.pref.attributes = params[:pref] if params[:pref]
       if @user.save
         @user.pref.save
         set_language_if_valid @user.language
@@ -100,6 +100,9 @@ class MyController < ApplicationController
         @user.password, @user.password_confirmation = params[:new_password], params[:new_password_confirmation]
         @user.must_change_passwd = false
         if @user.save
+          # Reset the session creation time to not log out this session on next
+          # request due to ApplicationController#force_logout_if_password_changed
+          session[:ctime] = User.current.passwd_changed_on.utc.to_i
           flash[:notice] = l(:notice_account_password_updated)
           redirect_to my_account_path
         end
